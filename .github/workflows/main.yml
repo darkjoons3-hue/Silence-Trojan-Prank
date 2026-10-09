@@ -1,0 +1,17 @@
+name: Build Silence
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+      - name: Compile
+        run: |
+          cl /nologo /EHsc /O2 /MT /utf-8 /DUNICODE /D_UNICODE main.cpp /Fe:silence.exe /link /SUBSYSTEM:WINDOWS user32.lib gdi32.lib winmm.lib ole32.lib oleaut32.lib advapi32.lib shell32.lib msimg32.lib
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: silence
+          path: silence.exe
